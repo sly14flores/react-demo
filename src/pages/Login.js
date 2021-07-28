@@ -1,9 +1,13 @@
 import { Link, useHistory } from 'react-router-dom';
 import InputField from '../components/InputField'
 import ButtonPrimary from '../components/ButtonPrimary'
+import ErrorMessage from '../components/ErrorMessage'
+import Footer from '../components/Footer'
 import useValidation from '../hooks/useValidation';
-import { authState  } from '../store/atoms'
-import { useRecoilState } from 'recoil';
+import { authState } from '../store/atoms'
+import { selectProfilesState } from '../store/selectors';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { useEffect, useState } from 'react';
 
 const initCredential = {
     username: '',
@@ -23,17 +27,37 @@ const schema = {
 
 const Login = () => {
 
-    const [auth, setAuth] = useRecoilState(authState);    
+    const setAuth = useSetRecoilState(authState);
+    const profiles = useRecoilValue(selectProfilesState);
+    const [invalidCredential, setInvalidCredential] = useState(false)
+    const [submitting, setSubmitting] = useState(false)
     const history = useHistory()
+
+    useEffect(() => {
+        console.log(profiles)
+    },[profiles])
 
     const loginUser = (values) => {
 
-        // Check credential
+        setSubmitting(true)
+        setInvalidCredential(false)
 
-        setAuth({isLogin: true})
-        setTimeout(() => {
-            history.push("/")
-        }, 100)
+        // Check credential
+        const i = profiles.findIndex(profile => 
+            profile.username === values.username &&
+            profile.password === values.password
+        )
+
+        if (i>=0) {
+            setAuth({isLogin: true})
+            setTimeout(() => {
+                setSubmitting(false)
+                history.push("/")
+            }, 1000)
+        } else {
+            setSubmitting(false)
+            setInvalidCredential(true)
+        }
     }
 
     const {
@@ -81,8 +105,15 @@ const Login = () => {
                             invalid={errors.password?.invalid}
                             invalidMessage={errors.password.message}                            
                         />
+                        {
+                            invalidCredential && <span className="inline-block mb-4"><ErrorMessage message="Username or password provided is invalid" /></span>
+                        }
                         <div className="flex items-center justify-between">
-                            <ButtonPrimary type="button" onClick={submitForm}>Sign In</ButtonPrimary>
+                            <ButtonPrimary
+                                type="button"
+                                onClick={submitForm}
+                                loading={submitting}
+                            >Sign In</ButtonPrimary>
                             <Link
                                 className="inline-block align-baseline font-normal text-sm text-blue-500 hover:text-blue-800"
                                 to="/register"
@@ -91,9 +122,7 @@ const Login = () => {
                             </Link>
                         </div>
                     </form>
-                <p className="text-center text-gray-500 text-xs">
-                    &copy; 2021 slyflores. All rights reserved.
-                </p>
+                    <Footer />
             </div>
             </div>
         </div>

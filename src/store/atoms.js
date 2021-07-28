@@ -13,6 +13,7 @@ const profileState = atom({
         firstname: '',
         lastname: '',
         username: '',
+        password: '',
     }
 })
 
