@@ -74,7 +74,9 @@ const useValidation = ({ schema, initValues, handler }) => {
 
   }
 
-  const submitForm = () => {
+  const submitForm = (e) => {
+
+    e.preventDefault()
 
     validate(fields).then(res => {
       if (res==="all") handler(fields)

@@ -7,7 +7,7 @@ import useValidation from '../hooks/useValidation';
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { profilesState } from '../store/atoms'
 import { selectProfileState } from '../store/selectors'
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const schema = {
     firstname: {
@@ -48,13 +48,17 @@ const SignUp = () => {
         setSubmitting(true)
         setTimeout(() => {
             if (agree) {
-                setProfiles((oldProfiles) => [
-                    ...oldProfiles,
-                    {
-                        id: oldProfiles.length+1,
-                        ...values
-                    }
-                ])
+                setProfiles((oldProfiles) => {
+                    const merged = [
+                        ...oldProfiles, 
+                        {
+                            id: oldProfiles.length+1,
+                            ...values
+                        }
+                    ]
+                    localStorage.setItem("dictDemo", JSON.stringify({profiles: merged}))
+                    return merged
+                })
                 setTimeout(() => {
                     setSubmitting(false) 
                     history.push("/login")                
@@ -145,14 +149,20 @@ const SignUp = () => {
                                     </div>
                                     <button
                                         type="button"
-                                        className="mt-3 text-lg font-semibold bg-gray-800 w-full text-white rounded-lg px-6 py-3 block shadow-xl hover:text-white hover:bg-black"
+                                        className="mt-3 text-lg font-semibold bg-indigo-500 hover:bg-indigo-600 focus:bg-indigo-700 w-full text-white rounded-lg px-6 py-3 block shadow-xl hover:text-white"
                                         onClick={submitForm}
                                     >
                                         {
                                             submitting && <span className="inline-block"><Spinner /></span>
                                         }
                                         Register
-                                    </button>                                                                                                                                      
+                                    </button>
+                                    <Link
+                                        to="/login"
+                                        className="mt-3 text-lg text-center font-semibold bg-pink-500 hover:bg-pink-600 focus:bg-pink-700 w-full text-white rounded-lg px-6 py-3 block shadow-xl hover:text-white"
+                                    >
+                                        Login
+                                    </Link>
                                 </div>
                             </form>
                         </div>

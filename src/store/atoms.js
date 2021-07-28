@@ -17,9 +17,12 @@ const profileState = atom({
     }
 })
 
+const storage = localStorage.getItem("dictDemo") || '{"profiles": []}'
+const { profiles } = JSON.parse(storage)
+
 const profilesState = atom({
     key: 'profilesState',
-    default: []
+    default: profiles
 })
 
 export {

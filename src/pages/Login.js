@@ -58,6 +58,7 @@ const Login = () => {
             setSubmitting(false)
             setInvalidCredential(true)
         }
+        
     }
 
     const {
@@ -110,7 +111,7 @@ const Login = () => {
                         }
                         <div className="flex items-center justify-between">
                             <ButtonPrimary
-                                type="button"
+                                type="submit"
                                 onClick={submitForm}
                                 loading={submitting}
                             >Sign In</ButtonPrimary>
