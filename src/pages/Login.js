@@ -4,7 +4,7 @@ import ButtonPrimary from '../components/ButtonPrimary'
 import ErrorMessage from '../components/ErrorMessage'
 import Footer from '../components/Footer'
 import useValidation from '../hooks/useValidation';
-import { authState } from '../store/atoms'
+import { authState, loginState } from '../store/atoms'
 import { selectProfilesState } from '../store/selectors';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { useEffect, useState } from 'react';
@@ -28,6 +28,7 @@ const schema = {
 const Login = () => {
 
     const setAuth = useSetRecoilState(authState);
+    const setLoginState = useSetRecoilState(loginState);
     const profiles = useRecoilValue(selectProfilesState);
     const [invalidCredential, setInvalidCredential] = useState(false)
     const [submitting, setSubmitting] = useState(false)
@@ -48,10 +49,19 @@ const Login = () => {
             profile.password === values.password
         )
 
+        const getProfile = profiles[i]
+
         if (i>=0) {
             setAuth({isLogin: true})
+            const login = {
+                id: getProfile.id,
+                firstname: getProfile.firstname,
+                lastname: getProfile.lastname
+            }
+            setLoginState(login)
             const storage = JSON.parse(localStorage.getItem("dictDemo"))
             storage.isLogin = true
+            storage.login = login
             localStorage.setItem("dictDemo", JSON.stringify(storage))
             setTimeout(() => {
                 setSubmitting(false)

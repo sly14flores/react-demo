@@ -27,7 +27,18 @@ const routes = [
         key: 3,
         path: '/register',
         component: () => <SignUp />
-    },    
+    },
+    {
+        key: 3,
+        path: '/posts',
+        exact: true,
+        component: () => <Home />
+    },
+    {
+        key: 4,
+        path: '/posts/new',
+        component: () => <Home />
+    },
 ]
 
 const PrivateRoute = ({ children, ...rest }) => {

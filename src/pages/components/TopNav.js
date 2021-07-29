@@ -3,19 +3,30 @@ import DropDown from './DropDown'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil'
-import { authState } from '../../store/atoms';
+import { useSetRecoilState, useRecoilValue } from 'recoil'
+import { authState, loginState } from '../../store/atoms';
+import { selectLoginState } from '../../store/selectors';
 
 const TopNav = () => {
 
     const [confirmLogout, setConfirmLogout] = useState(false)
-    const setAuth = useSetRecoilState(authState);    
+    const setAuth = useSetRecoilState(authState);
+    const setLoginState = useSetRecoilState(loginState);  
     const history = useHistory()
-    
+
+    const loginProfile = useRecoilValue(selectLoginState)
+
     const logout = () => {
         setAuth({isLogin: false})
+        const login = {
+            id: 0,
+            firstname: '',
+            lastname: ''
+        }         
+        setLoginState(login)    
         const storage = JSON.parse(localStorage.getItem("dictDemo"))
         storage.isLogin = false
+        storage.login = login
         localStorage.setItem("dictDemo", JSON.stringify(storage))        
         setTimeout(() => {
             history.push("/login")
@@ -47,11 +58,13 @@ const TopNav = () => {
 
                     {/* <!-- to bar right  --> */}
                     <ul className="flex items-center">
+                        <li className="h-10 w-24 pt-2">
+                            {loginProfile.firstname} {loginProfile.lastname}
+                        </li>
                         <li className="h-10 w-10">
                             <DropDown confirmLogout={confirmLogout} setConfirmLogout={setConfirmLogout} />
                         </li>
                     </ul>
-
                 </nav>
             </div>
             <ConfirmDialog
