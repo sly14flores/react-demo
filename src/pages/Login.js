@@ -50,6 +50,9 @@ const Login = () => {
 
         if (i>=0) {
             setAuth({isLogin: true})
+            const storage = JSON.parse(localStorage.getItem("dictDemo"))
+            storage.isLogin = true
+            localStorage.setItem("dictDemo", JSON.stringify(storage))
             setTimeout(() => {
                 setSubmitting(false)
                 history.push("/")

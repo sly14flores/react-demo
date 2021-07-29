@@ -1,9 +1,12 @@
 import { atom } from 'recoil';
 
+const storage = localStorage.getItem("dictDemo") || '{"profiles": [], "isLogin": false}'
+const { profiles, isLogin } = JSON.parse(storage)
+
 const authState = atom({
     key: 'authState',
     default: {
-        isLogin: false,
+        isLogin: isLogin || false,
     }
 })
 
@@ -17,12 +20,9 @@ const profileState = atom({
     }
 })
 
-const storage = localStorage.getItem("dictDemo") || '{"profiles": []}'
-const { profiles } = JSON.parse(storage)
-
 const profilesState = atom({
     key: 'profilesState',
-    default: profiles
+    default: profiles || []
 })
 
 export {
