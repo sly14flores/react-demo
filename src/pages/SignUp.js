@@ -8,6 +8,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { profilesState } from '../store/atoms'
 import { selectProfileState } from '../store/selectors'
 import { Link, useHistory } from 'react-router-dom';
+import useStorage from '../hooks/useStorage';
 
 const schema = {
     firstname: {
@@ -32,12 +33,13 @@ const SignUp = () => {
 
     const [agree, setAgree] = useState(false)
     const [submitted, setSubmitted] = useState(false)
-    const [submitting, setSubmitting] = useState(false)
     
     const profile = useRecoilValue(selectProfileState)
     const setProfiles = useSetRecoilState(profilesState)
 
     const history = useHistory()
+
+    const profilesLocal = useStorage('profiles')
 
     const handleAgree = (e) => {
         setAgree(e.target.checked)
@@ -45,7 +47,6 @@ const SignUp = () => {
 
     const register = (values) => {
         setSubmitted(true)
-        setSubmitting(true)
         setTimeout(() => {
             if (agree) {
                 setProfiles((oldProfiles) => {
@@ -56,15 +57,12 @@ const SignUp = () => {
                             ...values
                         }
                     ]
-                    localStorage.setItem("dictDemo", JSON.stringify({profiles: merged}))
+                    profilesLocal.update(merged)
                     return merged
                 })
                 setTimeout(() => {
-                    setSubmitting(false) 
                     history.push("/login")                
                 }, 1000);     
-            } else {
-                setSubmitting(false)
             }
         },1000)
     }
@@ -74,7 +72,8 @@ const SignUp = () => {
         values,
         errors,
         submitForm,
-        // resetValidations
+        // resetValidations,
+        loading,
     } = useValidation({
         schema,
         initValues: profile,
@@ -153,7 +152,7 @@ const SignUp = () => {
                                         onClick={submitForm}
                                     >
                                         {
-                                            submitting && <span className="inline-block"><Spinner /></span>
+                                            loading && <span className="inline-block"><Spinner /></span>
                                         }
                                         Register
                                     </button>

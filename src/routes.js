@@ -8,6 +8,7 @@ import SignUp from "./pages/SignUp"
 import Home from "./pages/Home"
 
 import useAuth from './hooks/useAuth'
+import ManagePosts from "./pages/ManagePosts";
 const authRoute = "/login"
 
 const routes = [
@@ -31,13 +32,8 @@ const routes = [
     {
         key: 3,
         path: '/posts',
-        exact: true,
-        component: () => <Home />
-    },
-    {
-        key: 4,
-        path: '/posts/new',
-        component: () => <Home />
+        private: true,
+        component: () => <ManagePosts />
     },
 ]
 

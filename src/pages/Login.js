@@ -7,7 +7,8 @@ import useValidation from '../hooks/useValidation';
 import { authState, loginState } from '../store/atoms'
 import { selectProfilesState } from '../store/selectors';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import useStorage from '../hooks/useStorage';
 
 const initCredential = {
     username: '',
@@ -31,16 +32,13 @@ const Login = () => {
     const setLoginState = useSetRecoilState(loginState);
     const profiles = useRecoilValue(selectProfilesState);
     const [invalidCredential, setInvalidCredential] = useState(false)
-    const [submitting, setSubmitting] = useState(false)
     const history = useHistory()
 
-    useEffect(() => {
-        console.log(profiles)
-    },[profiles])
+    const isLoginLocal = useStorage('isLogin')
+    const loginLocal = useStorage('login')
 
     const loginUser = (values) => {
 
-        setSubmitting(true)
         setInvalidCredential(false)
 
         // Check credential
@@ -52,23 +50,20 @@ const Login = () => {
         const getProfile = profiles[i]
 
         if (i>=0) {
-            setAuth({isLogin: true})
             const login = {
                 id: getProfile.id,
                 firstname: getProfile.firstname,
                 lastname: getProfile.lastname
             }
             setLoginState(login)
-            const storage = JSON.parse(localStorage.getItem("dictDemo"))
-            storage.isLogin = true
-            storage.login = login
-            localStorage.setItem("dictDemo", JSON.stringify(storage))
+            loginLocal.update(login)
+            
+            setAuth({isLogin: true})
+            isLoginLocal.update(true)            
             setTimeout(() => {
-                setSubmitting(false)
                 history.push("/")
             }, 1000)
         } else {
-            setSubmitting(false)
             setInvalidCredential(true)
         }
         
@@ -79,7 +74,8 @@ const Login = () => {
         values,
         errors,
         submitForm,
-        // resetValidations
+        // resetValidations,
+        loading,
     } = useValidation({
         schema,
         initValues: initCredential,
@@ -126,7 +122,7 @@ const Login = () => {
                             <ButtonPrimary
                                 type="submit"
                                 onClick={submitForm}
-                                loading={submitting}
+                                loading={loading}
                             >Sign In</ButtonPrimary>
                             <Link
                                 className="inline-block align-baseline font-normal text-sm text-blue-500 hover:text-blue-800"

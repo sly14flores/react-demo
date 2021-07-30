@@ -4,7 +4,6 @@ import {
     profileState,
     loginState,
     profilesState,
-    tabsState,
     postsState,
 } from './atoms'
 
@@ -48,22 +47,6 @@ const selectProfilesState = selector({
     }
 })
 
-const selectMainTab = selector({
-    key: 'selectMainTab',
-    get: ({get}) => {
-        const { main } = get(tabsState)
-        return main
-    }
-})
-
-const selectCatTab = selector({
-    key: 'selectCatTab',
-    get: ({get}) => {
-        const { category } = get(tabsState)
-        return category
-    }
-})
-
 const selectPostsState = selector({
     key: 'selectPostsState',
     get: ({get}) => {
@@ -78,7 +61,5 @@ export {
     selectLoginState,
     selectProfileState,
     selectProfilesState,
-    selectMainTab,
-    selectCatTab,
     selectPostsState,
 }

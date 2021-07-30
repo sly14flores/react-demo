@@ -1,7 +1,8 @@
 import { atom } from 'recoil';
+import { storageStr } from '../constants'
 
-const storage = localStorage.getItem("dictDemo") || '{"profiles": [], "isLogin": false, "login": {"id":0, "firstname":"", "lastname":""}}'
-const { profiles, isLogin, login } = JSON.parse(storage)
+const storage = localStorage.getItem("dictDemo") || storageStr
+const { profiles, isLogin, login, posts } = JSON.parse(storage)
 
 const authState = atom({
     key: 'authState',
@@ -32,20 +33,12 @@ const loginState = atom({
 
 const profilesState = atom({
     key: 'profilesState',
-    default: profiles || []
-})
-
-const tabsState = atom({
-    key: 'tabsState',
-    default: {
-        main: '/',
-        category: 'All'
-    }
+    default: profiles
 })
 
 const postsState = atom({
     key: 'postsState',
-    default: []
+    default: posts
 })
 
 export {
@@ -53,6 +46,5 @@ export {
     profileState,
     loginState,
     profilesState,
-    tabsState,
     postsState,
 }

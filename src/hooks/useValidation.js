@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 const useValidation = ({ schema, initValues, handler }) => {
 
   const [fields, setFields] = useState({...initValues})
+  const [loading, setLoading] = useState(false)
 
   let validations = {...schema}
   Object.keys(validations).forEach(function(key) {
@@ -76,13 +77,20 @@ const useValidation = ({ schema, initValues, handler }) => {
 
   const submitForm = (e) => {
 
+    setLoading(true)
+
     e.preventDefault()
 
-    validate(fields).then(res => {
-      if (res==="all") handler(fields)
-    }).catch(res => {
-      //
-    })
+    setTimeout(() => {
+
+      validate(fields).then(res => {
+        setLoading(false)
+        if (res==="all") handler(fields)
+      }).catch(res => {
+        setLoading(false)
+      })      
+
+    },100)
 
   } 
 
@@ -91,7 +99,8 @@ const useValidation = ({ schema, initValues, handler }) => {
     values: {...fields},
     errors: {...errors},
     submitForm,
-    resetValidations
+    resetValidations,
+    loading,
   }
 
 }

@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { useSetRecoilState, useRecoilValue } from 'recoil'
 import { authState, loginState } from '../../store/atoms';
 import { selectLoginState } from '../../store/selectors';
+import useStorage from '../../hooks/useStorage';
 
 const TopNav = () => {
 
@@ -16,18 +17,20 @@ const TopNav = () => {
 
     const loginProfile = useRecoilValue(selectLoginState)
 
+    const isLoginLocal = useStorage('isLogin')
+    const loginLocal = useStorage('login')
+
     const logout = () => {
         setAuth({isLogin: false})
+        isLoginLocal.update(false)
         const login = {
             id: 0,
             firstname: '',
             lastname: ''
-        }         
-        setLoginState(login)    
-        const storage = JSON.parse(localStorage.getItem("dictDemo"))
-        storage.isLogin = false
-        storage.login = login
-        localStorage.setItem("dictDemo", JSON.stringify(storage))        
+        }
+        setLoginState(login)
+        loginLocal.update(login)
+
         setTimeout(() => {
             history.push("/login")
         }, 500)
