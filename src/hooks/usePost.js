@@ -39,9 +39,11 @@ const usePost = () => {
     setPosts((oldPosts) => {
       const postsCopy = [...oldPosts]
       postsCopy.splice(index,1)
-      postsLocal.update(postsCopy)
+      postsLocal.update('posts',postsCopy)
       return postsCopy
-    }) 
+    })
+
+    return posts.length - 1
 
   }
 

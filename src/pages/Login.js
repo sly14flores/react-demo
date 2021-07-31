@@ -34,8 +34,7 @@ const Login = () => {
     const [invalidCredential, setInvalidCredential] = useState(false)
     const history = useHistory()
 
-    const isLoginLocal = useStorage('isLogin')
-    const loginLocal = useStorage('login')
+    const storage = useStorage()
 
     const loginUser = (values) => {
 
@@ -56,10 +55,10 @@ const Login = () => {
                 lastname: getProfile.lastname
             }
             setLoginState(login)
-            loginLocal.update(login)
+            storage.update('login',login)
             
             setAuth({isLogin: true})
-            isLoginLocal.update(true)            
+            storage.update('isLogin',true)            
             setTimeout(() => {
                 history.push("/")
             }, 1000)

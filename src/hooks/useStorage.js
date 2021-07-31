@@ -1,8 +1,8 @@
 import { storageStr } from '../constants'
 
-const useStorage = (key) => {
+const useStorage = () => {
 
-  const update = (value) => {
+  const update = (key,value) => {
 
     const getStorage = localStorage.getItem("dictDemo") || storageStr
     const storage = JSON.parse(getStorage)

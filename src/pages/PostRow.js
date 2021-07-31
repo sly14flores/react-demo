@@ -1,7 +1,11 @@
 import { Link, useRouteMatch } from 'react-router-dom'
 import usePost from '../hooks/usePost'
+import ConfirmDialog from '../components/ConfirmDialog';
+import { useState } from 'react';
 
-const PostRow = ({post}) => {
+const PostRow = ({post, setPage, perPage}) => {
+
+  const [isOpen, setIsOpen] = useState(false)
 
   const { path } = useRouteMatch();
   const postHook = usePost()
@@ -9,8 +13,14 @@ const PostRow = ({post}) => {
   const { id, category, title, content } = post
 
   const removePost = (e) => {
-    postHook.remove(id)
+    setIsOpen(true)
     e.preventDefault()
+  }
+
+  const onOk = () => {
+    const totalPosts = postHook.remove(id)
+    console.log(totalPosts)
+    if (totalPosts <= perPage) setPage(0)
   }
 
   return (
@@ -31,6 +41,14 @@ const PostRow = ({post}) => {
           <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
           <Link to={`${path}/${id}`} className="text-blue-400 hover:text-blue-600 underline">Edit</Link>
           <a href="#!" onClick={removePost} className="text-blue-400 hover:text-blue-600 underline pl-6">Remove</a>
+          <ConfirmDialog
+            title="Confirmation"
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            onOk={onOk}
+          >
+            Are you sure you want to delete this post?
+          </ConfirmDialog>
       </td>
     </tr>
   )

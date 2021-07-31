@@ -39,7 +39,7 @@ const SignUp = () => {
 
     const history = useHistory()
 
-    const profilesLocal = useStorage('profiles')
+    const storage = useStorage()
 
     const handleAgree = (e) => {
         setAgree(e.target.checked)
@@ -57,7 +57,7 @@ const SignUp = () => {
                             ...values
                         }
                     ]
-                    profilesLocal.update(merged)
+                    storage.update('profiles',merged)
                     return merged
                 })
                 setTimeout(() => {

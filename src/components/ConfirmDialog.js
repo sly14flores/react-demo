@@ -1,7 +1,14 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 
-const ConfirmDialog = ({ title, children, isOpen, setIsOpen, onOk, onClose }) => {
+const ConfirmDialog = ({
+    title,
+    children,
+    isOpen,
+    setIsOpen,
+    onOk,
+    onClose
+}) => {
 
     function closeModal() {
         if (onClose) {

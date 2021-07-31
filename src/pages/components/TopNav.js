@@ -17,19 +17,18 @@ const TopNav = () => {
 
     const loginProfile = useRecoilValue(selectLoginState)
 
-    const isLoginLocal = useStorage('isLogin')
-    const loginLocal = useStorage('login')
+    const storage = useStorage()
 
     const logout = () => {
         setAuth({isLogin: false})
-        isLoginLocal.update(false)
+        storage.update('isLogin',false)
         const login = {
             id: 0,
             firstname: '',
             lastname: ''
         }
         setLoginState(login)
-        loginLocal.update(login)
+        storage.update('login',login)
 
         setTimeout(() => {
             history.push("/login")

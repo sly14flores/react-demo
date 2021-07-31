@@ -21,7 +21,7 @@ const NewPost = () => {
   const setPosts = useSetRecoilState(postsState)
   const login = useRecoilValue(selectLoginState)
 
-  const postsLocal = useStorage('posts')
+  const storage = useStorage()
 
   const addPost = (values) => {
 
@@ -34,7 +34,7 @@ const NewPost = () => {
               user: `${login.firstname} ${login.lastname}`,
           }
       ]
-      postsLocal.update(merged)
+      storage.update('posts',merged)
       return merged
     })
 
